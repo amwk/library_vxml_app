@@ -1,3 +1,116 @@
+<vxml version="2.1">
+    <nomatch>
+        Sorry, I didn't get that. Please repeat.
+        <reprompt/>
+    </nomatch>
+    <noinput>
+        Sorry, I can't hear you. Please repeat.
+        <reprompt/>
+    </noinput>
+    <form id="Salon">
+        <property name="input" value="voice"/>
+        <field name="Usluga" expr="" cond="true">>
+            <prompt>
+                Hello. Welcome in City Library. Please choose one of following actions: login, exit
+            </prompt>
+            <grammar mode="voice" root="Jakausluga">
+                <rule id="Jakausluga" scope="public">
+                    <one-of>
+                        <item>login</item>
+                        <item>exit</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled namelist="Usluga">
+                <if cond="Usluga == 'login'">
+                    <prompt>
+                        You have choosed login action
+                    </prompt>
+                    <goto next="#Connection"/>
+                    <elseif cond="Usluga == 'exit'"/>
+                    <prompt>
+                        You have choosed exit action. Goodbye.
+                    </prompt>
+                    <noinput>
+                        <disconnect/>
+                    </noinput>
+                </if>
+            </filled>
+        </field>
+    </form>
+    <form id="ankieta">
+        <subdialog name="SubD_1" src="Subdialog.xml">
+            <param name="confirm_prompt"
+                   expr="'Rate from 1 to 5 your experiance? '"/>
+
+            <filled>
+                <prompt>
+                    Your answer is.
+                </prompt>
+
+                <if cond="SubD_1.response=='1'">
+                    <prompt>
+                        one, why so low?
+                    </prompt>
+
+                    <elseif cond="SubD_1.response=='2'"/>
+                    <prompt>
+                        two, not bad
+                    </prompt>
+
+                    <elseif cond="SubD_1.response=='3'"/>
+                    <prompt>
+                        three, thanks
+                    </prompt>
+
+                    <elseif cond="SubD_1.response=='4'"/>
+                    <prompt>
+                        four, great
+                    </prompt>
+
+                    <else/>
+                    <prompt>
+                        marvelous.
+                    </prompt>
+                </if>
+            </filled>
+        </subdialog>
+        <goto next="#Connection"/>
+    </form>
+    <form id="Connection">
+        <nomatch>
+            Sorry, I didn't get that. Please repeat.
+            <reprompt/>
+        </nomatch>
+        <noinput>
+            Sorry, I can't hear you. Please repeat.
+            <reprompt/>
+        </noinput>
+        <property name="inputmodes" value="voice"/>
+        <field name="ConnectionChoose" expr="yes" cond="true">
+            <prompt>Thank you for loging in. Would you like to rate your experiance with our system?</prompt>
+            <grammar mode="voice" root="connection">
+                <rule id="connection" scope="public">
+                    <one-of>
+                        <item>yes</item>
+                        <item>no</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <if cond="ConnectionChoose == 'yes'">
+                    <prompt>Ok. Please wait.</prompt>
+                    <clear namelist="ConnectionChoose" />
+                    <goto next="#ankieta"/>
+                    <elseif cond="ConnectionChoose == 'no'"/>
+                    <prompt>Ok. Thanks for calling. See you later.</prompt>
+                </if>
+            </filled>
+        </field>
+    </form>
+</vxml>
+
+<!--
 <head>
   <title>library_vxml_app</title>
 </head>
@@ -10,3 +123,4 @@
   <button>Click Me</button>
   <p>You've pressed the button {{counter}} times.</p>
 </template>
+-->
