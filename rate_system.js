@@ -10,9 +10,9 @@ Router.route('/rate_system.xml', {
         xmlData += "</form>";
         xmlData += "</vxml>";
 
-
-        var xmlData2 = "<var name=\"MyVxmlVar\" expr=\"tmp'\" />";2
-
+        var xmlData2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+        xmlData2 += "<vxml version=\"2.1\">";
+        xmlData2 += "<var name=\"MyVxmlVar\" expr=\"tmp'\" />";
         xmlData2 += "<form>";
         xmlData2 += "<block>";
         xmlData2 += "<prompt>";
