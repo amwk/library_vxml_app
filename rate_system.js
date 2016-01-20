@@ -11,19 +11,19 @@ Router.route('/rate_system.xml', {
         xmlData += "</vxml>";
 
 
-        var xmlData = "<var name=\"MyVxmlVar\" expr=\"tmp'\" />";
+        var xmlData2 = "<var name=\"MyVxmlVar\" expr=\"tmp'\" />";2
 
-        xmlData += "<form>";
-        xmlData += "<block>";
-        xmlData += "<prompt>";
-        xmlData += "When asked if anything was more colossally dumb than dog sweaters, you answered";
-        xmlData += "<value expr=\"MyVxmlVar\">";
-        xmlData += "</prompt>";
-        xmlData += "</block>";
-        xmlData += "</form>";
-        xmlData += "</vxml>";
+        xmlData2 += "<form>";
+        xmlData2 += "<block>";
+        xmlData2 += "<prompt>";
+        xmlData2 += "When asked if anything was more colossally dumb than dog sweaters, you answered";
+        xmlData2 += "<value expr=\"MyVxmlVar\">";
+        xmlData2 += "</prompt>";
+        xmlData2 += "</block>";
+        xmlData2 += "</form>";
+        xmlData2 += "</vxml>";
 
         this.response.writeHead(200, {'Content-Type': 'application/xml'});
-        this.response.end(xmlData);
+        this.response.end(xmlData2);
     }
 });
