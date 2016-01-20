@@ -17,7 +17,7 @@ Router.route('/rate_system.xml', {
         xmlData2 += "<block>";
         xmlData2 += "<prompt>";
         xmlData2 += "When asked if anything was more colossally dumb than dog sweaters, you answered";
-        xmlData2 += "<value expr=\"MyVxmlVar\">";
+        xmlData2 += "<value expr=\"MyVxmlVar\" />";
         xmlData2 += "</prompt>";
         xmlData2 += "</block>";
         xmlData2 += "</form>";
