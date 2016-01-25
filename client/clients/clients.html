@@ -1,0 +1,15 @@
+<template name="clients">
+  <div style="display: inline-block; width: 45%;">
+    <h2>Clients & Books</h2>
+    {{#each clients}}
+      <p>{{name}}<button class="deleteClient">&times;</button></p>
+      <ul>
+        {{#each booksObj}}
+        <li>Title: {{title}} Author: {{author}}
+            <button class="deleteBook">&times;</button>
+        </li>
+        {{/each}}
+      </ul>
+    {{/each}}
+  </div>
+</template>
