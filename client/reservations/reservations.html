@@ -1,0 +1,10 @@
+<template name="reservations">
+  <div style="display: inline-block; width: 45%;">
+    <h2>Clients & Books</h2>
+    {{#each reservations}}
+        {{#each this}}
+            {{this}}
+        {{/each}}
+    {{/each}}
+  </div>
+</template>
