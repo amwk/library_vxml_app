@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version="2.1">
-    <form id="basic_information_form">
-        <field name=" F_1" type="boolean">
-            <prompt>Is there anything more stupid than dog sweaters?</prompt>
+
+    <var name="global_user_name" expr="'unknown'" />
+
+    <var name="global_book_availability" expr="'yes'" />
+
+    <var name="global_book_name" expr="'unknown'" />
+    <var name="global_book_author" expr="'unknown'" />
+
+
+    <var name="global_authentication_result" expr="'false'" />
+    <form id="check_book_availability_form">
+        <subdialog
+                name="response"
+                method="post"
+                srcexpr="'http://46.101.157.233:3000//find_book.xml'"
+                maxage="0"
+                maxstale="0"
+                namelist="global_book_author global_book_name global_publishing_house">
             <filled>
-                <submit next="http://46.101.157.233:3000/rate_system.xml" namelist="F_1" method = "get" />
+                <if cond="response.isInDB==true">
+                    <prompt> Ok. Book has been found. Do you want to rent <value expr="global_book_name" /> written by <value expr="global_book_author" /> and issued by <value expr="global_publishing_house" />? </prompt>
+                    <goto next="#confirmation_form" />
+                    <else />
+                    <prompt> I cannot find that book so I cannot help you. Bye </prompt>
+                    <exit />
+                </if>
             </filled>
-        </field>
+        </subdialog>
     </form>
 </vxml>
