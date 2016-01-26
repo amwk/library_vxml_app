@@ -1,7 +1,7 @@
 Template.books.helpers({
   books: function() {
     return Books.find({}, {
-      sort: { name: 1 }
+      sort: { title: 1 }
     });
   },
   bookClients: function(bookId) {

@@ -1,34 +1,12 @@
-Router.route('/grammar.gls', {
+Router.route('/init.ddd', {
     where: 'server',
     action: function () {
 
-        var books = Books.find({});
 
-        var fill_slots = function() {
-            var bookArray = [];
-            var titles='';
-            var authors='';
-            var publishers='';
-            books.forEach(function(book){
-                titles+=book.title + "{ <book_name "+book.title +">}\n";
-                authors+=book.author+ "{ <book_author "+book.title +">}\n";
-                publishers+=book.publisher+ "{ <publishing_house "+book.title +">}\n";
-            });
-            bookArray["titles"]=titles;
-            bookArray["authors"]=authors;
-            bookArray["publishers"]=publishers;
+        Assets.getText("foo.txt", function (err, res) {
 
-            return bookArray;
-        };
 
-        var fill_titles = function(){
-
-        };
-
-        var fill_publishers = function(){
-
-        };
-
+        });
 
         var grammar = "Request\n";
         grammar += "(";

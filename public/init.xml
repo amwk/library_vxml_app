@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1">
+    <form id="basic_information_form">
+        <field name=" F_1" type="boolean">
+            <prompt>Is there anything more stupid than dog sweaters?</prompt>
+            <filled>
+                <submit next="http://46.101.157.233:3000/rate_system.xml" namelist="F_1" method = "get" />
+            </filled>
+        </field>
+    </form>
+</vxml>

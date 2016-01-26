@@ -8,6 +8,7 @@ if (Meteor.isClient) {
 
             var title = event.target.title.value;
             var author = event.target.author.value;
+            var publisher = event.target.publisher.value;
 
             var clients = Clients.findOne({name:name});
 
@@ -30,6 +31,7 @@ if (Meteor.isClient) {
                 _id : bookId,
                 author: author,
                 title: title,
+                publisher: publisher,
                 createdAt: createdAt
             });
 

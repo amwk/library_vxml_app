@@ -1,4 +1,4 @@
-Router.route('find_books.xml', {
+Router.route('find_book.xml', {
     where: 'server',
     action: function () {
 
