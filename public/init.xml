@@ -1,20 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version="2.1">
-
     <var name="global_user_name" expr="'unknown'" />
-
     <var name="global_book_availability" expr="'yes'" />
-
     <var name="global_book_name" expr="'unknown'" />
     <var name="global_book_author" expr="'unknown'" />
-
-
+    <var name="global_publishing_house" expr="'unknown'" />
     <var name="global_authentication_result" expr="'false'" />
+
+
+    <form id="identification_form">
+        <field name="your_name">
+            <prompt> Ok. Please tell me your name. </prompt>
+
+            <grammar src="http://46.101.157.233:3000/grammarUser.gsl" type="text/gsl" />
+        </field>
+
+        <filled mode="all" namelist="your_name">
+            <assign name="global_user_name" expr="your_name" />
+            <prompt> Name of user is <value expr="your_name" /> </prompt>
+            <goto next="#book_choose_form" />
+        </filled>
+
+    </form>
+
+
+    <form id="book_choose_form">
+        <initial>
+            <prompt> Ok, <value expr="global_user_name" />. What book do you want to rent? </prompt>
+        </initial>
+
+        <grammar src="http://46.101.157.233:3000/grammar.gsl" type="text/gsl" scope="document"/>
+
+        <field name="book_name">
+            <prompt> Please tell me the title. </prompt>
+        </field>
+
+        <field name="book_author">
+            <prompt> Please tell me the author. </prompt>
+        </field>
+
+        <field name="publishing_house">
+            <prompt> Please tell me the publishing house. </prompt>
+        </field>
+
+        <catch event='nomatch' count='1'>
+            <prompt> I do not understand. Please say, for example: title of book is Java, written by Rowling and issued by Red. </prompt>
+        </catch>
+        <catch event='noinput' count='2'>
+            <prompt> Please say, for example: title of book is Java, written by Rowling and issued by Red. </prompt>
+        </catch>
+
+        <filled mode="all" namelist="book_name book_author publishing_house">
+            <assign name="global_book_name" expr="book_name" />
+            <assign name="global_book_author" expr="book_author" />
+            <assign name="global_publishing_house" expr="publishing_house" />
+            <goto next="#check_book_availability_form" />
+        </filled>
+    </form>
+
     <form id="check_book_availability_form">
         <subdialog
                 name="response"
                 method="post"
-                srcexpr="'http://46.101.157.233:3000//find_book.xml'"
+                srcexpr="'http://46.101.157.233:3000/find_book.xml'"
                 maxage="0"
                 maxstale="0"
                 namelist="global_book_author global_book_name global_publishing_house">
@@ -28,5 +76,24 @@
                 </if>
             </filled>
         </subdialog>
+    </form>
+
+    <form id="confirmation_form">
+        <field name="confirmation">
+            <grammar>
+                [ yes no ]
+            </grammar>
+
+            <filled>
+                <if cond="confirmation=='yes'">
+                    <prompt> Ok. The book is assigned to you. Bye. </prompt>
+                    <exit />
+
+                    <else />
+                    <prompt> So I cannot help you. Bye. </prompt>
+                    <exit />
+                </if>
+            </filled>
+        </field>
     </form>
 </vxml>

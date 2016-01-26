@@ -1,4 +1,4 @@
-Router.route('/grammar.gls', {
+Router.route('/grammar.xml', {
     where: 'server',
     action: function () {
 
@@ -29,8 +29,12 @@ Router.route('/grammar.gls', {
 
         };
 
-
-        var grammar = "Request\n";
+        var grammar = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+        grammar += "<vxml version=\"2.1\">";
+        grammar += "<form>";
+        grammar += "<grammar type=\"text/gsl\">";
+        grammar += "<![CDATA[\n";
+        grammar +=    "Request\n";
         grammar += "(";
         grammar += "[(BookName) (BookAuthor) (PublishingHouse)] ?[(BookName) (BookAuthor) (PublishingHouse)] ?[(BookName) (BookAuthor) (PublishingHouse)]\n";
         grammar += ")\n";
@@ -55,8 +59,12 @@ Router.route('/grammar.gls', {
         grammar += fill_slots()["publishers"];
         grammar += "]\n";
         grammar += ")\n";
+        grammar += "]]>\n";
+        grammar += "</grammar>";
+        grammar += "</form>";
+        grammar += "</vxml>";
 
-        this.response.writeHead(200, {'Content-Type': 'text/gls'});
+        this.response.writeHead(200, {'Content-Type': 'application/xml'});
         this.response.end(grammar);
     }
 });

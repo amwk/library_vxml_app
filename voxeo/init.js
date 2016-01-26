@@ -1,38 +1,61 @@
-Router.route('/init.ddd', {
+Router.route('/grammar.gsl', {
     where: 'server',
     action: function () {
 
+        var books = Books.find({});
 
-        Assets.getText("foo.txt", function (err, res) {
+        var fill_slots = function () {
+            var bookArray = [];
+            var titles = '';
+            var authors = '';
+            var publishers = '';
+            books.forEach(function (book) {
+                titles += book.title.toLowerCase() + "{ <book_name " + book.title.split(' ').join('_').toLowerCase() + ">}";
+                authors += book.author.toLowerCase() + "{ <book_author " + book.author.split(' ').join('_').toLowerCase() + ">}";
+                publishers += book.publisher.toLowerCase() + "{ <publishing_house " + book.publisher.split(' ').join('_').toLowerCase() + ">}";
+            });
+            bookArray["titles"] = titles;
+            bookArray["authors"] = authors;
+            bookArray["publishers"] = publishers;
 
+            return bookArray;
+        };
 
-        });
+        var fill_titles = function () {
 
-        var grammar = "Request\n";
+        };
+
+        var fill_publishers = function () {
+
+        };
+
+        var grammar = "Request";
         grammar += "(";
-        grammar += "[(BookName) (BookAuthor) (PublishingHouse)] ?[(BookName) (BookAuthor) (PublishingHouse)] ?[(BookName) (BookAuthor) (PublishingHouse)]\n";
-        grammar += ")\n";
-        grammar += "BookName\n";
-        grammar += "(\n\n";
-        grammar += "?[(title of book is) (titled)]\n";
-        grammar += "[\n";
+        grammar += "[(BookName) (BookAuthor) (PublishingHouse)]" +
+            "?[(BookName) (BookAuthor) (PublishingHouse)]" +
+            "?[(BookName) (BookAuthor) (PublishingHouse)]";
+        grammar += ")";
+        grammar += "BookName";
+        grammar += "(";
+        grammar += "?[(title of book is) (titled)]";
+        grammar += "[";
         grammar += fill_slots()["titles"];
-        grammar += "]\n";
-        grammar += ")\n";
-        grammar += "BookAuthor\n";
-        grammar += "(\n";
-        grammar += "    ?[(author of book) (is written by)]\n";
-        grammar += "[\n";
+        grammar += "]";
+        grammar += ")";
+        grammar += "BookAuthor";
+        grammar += "(";
+        grammar += "?[(author of book) (is written by)]";
+        grammar += "[";
         grammar += fill_slots()["authors"];
-        grammar += "]\n";
-        grammar += ")\n";
-        grammar += "PublishingHouse\n";
-        grammar += "(\n";
-        grammar += "    ?[(published by) (publisher is) (issued by)]\n";
-        grammar += "[\n";
+        grammar += "]";
+        grammar += ")";
+        grammar += "PublishingHouse";
+        grammar += "(";
+        grammar += "?[(published by) (publisher is) (issued by)]";
+        grammar += "[";
         grammar += fill_slots()["publishers"];
-        grammar += "]\n";
-        grammar += ")\n";
+        grammar += "]";
+        grammar += ")";
 
         this.response.writeHead(200, {'Content-Type': 'text/gls'});
         this.response.end(grammar);
