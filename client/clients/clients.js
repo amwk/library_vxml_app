@@ -6,13 +6,6 @@ Template.clients.helpers({
   }
 });
 
-
-Template.clients.events({
-    "click .deleteBook": function () {
-            Books.remove(this._id);
-    }
-});
-
 Template.clients.events({
     "click .deleteClient": function () {
         Clients.remove(this._id);

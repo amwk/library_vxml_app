@@ -10,36 +10,54 @@ if (Meteor.isClient) {
             var author = event.target.author.value;
             var publisher = event.target.publisher.value;
 
-            var clients = Clients.findOne({name:name});
+            var clients = Clients.findOne({name: name});
 
             var clientId = Random.id();
             var bookId = Random.id();
 
-            if(clients === undefined){
+            if (clients != '' && (title=='' || author=='' || publisher=='' )) {
                 Clients.insert({
-                    _id:  clientId,
-                    bookId: [bookId],
+                    _id: clientId,
                     name: name,
                     createdAt: createdAt
                 });
-            }else{
-                clientId=clients._id;
-                Clients.update({ _id:clientId },{$push: { bookId: bookId }});
             }
 
-            Books.insert({
-                _id : bookId,
-                author: author,
-                title: title,
-                publisher: publisher,
-                createdAt: createdAt
-            });
+            if (title!='' && author!='' && publisher!='' && clients == '') {
+                Books.insert({
+                    _id: bookId,
+                    author: author,
+                    title: title,
+                    publisher: publisher,
+                    createdAt: createdAt
+                });
+            }
 
-            Reservations.insert({
-                _id : Random.id(),
-                clientsId: clientId,
-                bookId: bookId
-            });
+            if (clients != ''&& title!='' && author!='' && publisher!='') {
+                Clients.insert({
+                    _id: clientId,
+                    name: name,
+                    createdAt: createdAt
+                });
+                Books.insert({
+                    _id: bookId,
+                    author: author,
+                    title: title,
+                    publisher: publisher,
+                    createdAt: createdAt
+                });
+
+                Reservations.insert({
+                    _id : Random.id(),
+                    clientsId: clientId,
+                    bookId: bookId,
+                    name: name,
+                    author: author,
+                    title: title,
+                    publisher: publisher,
+                    createdAt: createdAt
+                });
+            }
         }
     });
 }

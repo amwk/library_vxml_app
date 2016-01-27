@@ -3,13 +3,11 @@ Template.books.helpers({
     return Books.find({}, {
       sort: { title: 1 }
     });
-  },
-  bookClients: function(bookId) {
-    return Clients.find({
-      books: {
-        $in: [ bookId ]
-      }
-    });
   }
 });
 
+Template.books.events({
+  "click .deleteBook": function () {
+    Books.remove(this._id);
+  }
+});

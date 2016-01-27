@@ -1,60 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version="2.1">
-    <var name="global_user_name" expr="'unknown'" />
-    <var name="global_book_availability" expr="'yes'" />
-    <var name="global_book_name" expr="'unknown'" />
-    <var name="global_book_author" expr="'unknown'" />
-    <var name="global_publishing_house" expr="'unknown'" />
-    <var name="global_authentication_result" expr="'false'" />
+    <var name="global_user_name" expr="'unknown'"/>
+    <var name="global_book_availability" expr="'yes'"/>
+    <var name="global_book_name" expr="'unknown'"/>
+    <var name="global_book_author" expr="'unknown'"/>
+    <var name="global_publishing_house" expr="'unknown'"/>
+    <var name="global_authentication_result" expr="'false'"/>
+
+    <var name="global_user_id" expr="'unknown'"/>
+    <var name="global_book_id" expr="'unknown'"/>
 
 
     <form id="identification_form">
         <field name="your_name">
-            <prompt> Ok. Please tell me your name. </prompt>
+            <prompt>Ok. Please tell me your name.</prompt>
 
-            <grammar src="http://46.101.157.233:3000/grammarUser.gsl" type="text/gsl" />
+            <grammar src="http://46.101.157.233:3000/grammarUser.gsl" type="text/gsl"/>
         </field>
 
-        <filled mode="all" namelist="your_name">
-            <assign name="global_user_name" expr="your_name" />
-            <prompt> Name of user is <value expr="your_name" /> </prompt>
-            <goto next="#book_choose_form" />
-        </filled>
+        <subdialog
+                name="response"
+                method="post"
+                srcexpr="'http://46.101.157.233:3000/find_user.xml'"
+                maxage="0"
+                maxstale="0"
+                namelist="your_name">
+            <filled>
+                <assign name="global_authentication_result" expr="response.isUserInDB"/>
+                <if cond="global_authentication_result==true">
+                    <assign name="global_user_name" expr="your_name"/>
+                    <assign name="global_user_id" expr="response.clientId"/>
+                    <goto next="#book_choose_form"/>
+                    <else/>
+                    <prompt>Name of user is
+                        <value expr="your_name"/>
+                    </prompt>
+                    <prompt>The answer from server is<value expr="global_authentication_result"/>.
+                    </prompt>
+                    <goto next="#unknown_user"/>
+                </if>
+            </filled>
+        </subdialog>
+    </form>
 
+    <form id="unknown_user">
+        <block>
+            <prompt>Sorry, you cannot connect to the system. Bye.</prompt>
+            <exit/>
+        </block>
     </form>
 
 
     <form id="book_choose_form">
         <initial>
-            <prompt> Ok, <value expr="global_user_name" />. What book do you want to rent? </prompt>
+            <prompt>Ok,<value expr="global_user_name"/>. What book do you want to rent?
+            </prompt>
         </initial>
 
         <grammar src="http://46.101.157.233:3000/grammar.gsl" type="text/gsl" scope="document"/>
 
         <field name="book_name">
-            <prompt> Please tell me the title. </prompt>
+            <prompt>Please tell me the title.</prompt>
         </field>
 
         <field name="book_author">
-            <prompt> Please tell me the author. </prompt>
+            <prompt>Please tell me the author.</prompt>
         </field>
 
         <field name="publishing_house">
-            <prompt> Please tell me the publishing house. </prompt>
+            <prompt>Please tell me the publishing house.</prompt>
         </field>
 
         <catch event='nomatch' count='1'>
-            <prompt> I do not understand. Please say, for example: title of book is Java, written by Rowling and issued by Red. </prompt>
+            <prompt>I do not understand. Please say, for example: title of book is Java, written by Rowling and issued
+                by Red.
+            </prompt>
         </catch>
         <catch event='noinput' count='2'>
-            <prompt> Please say, for example: title of book is Java, written by Rowling and issued by Red. </prompt>
+            <prompt>Please say, for example: title of book is Java, written by Rowling and issued by Red.</prompt>
         </catch>
 
         <filled mode="all" namelist="book_name book_author publishing_house">
-            <assign name="global_book_name" expr="book_name" />
-            <assign name="global_book_author" expr="book_author" />
-            <assign name="global_publishing_house" expr="publishing_house" />
-            <goto next="#check_book_availability_form" />
+            <assign name="global_book_name" expr="book_name"/>
+            <assign name="global_book_author" expr="book_author"/>
+            <assign name="global_publishing_house" expr="publishing_house"/>
+            <goto next="#check_book_availability_form"/>
         </filled>
     </form>
 
@@ -68,11 +98,17 @@
                 namelist="global_book_author global_book_name global_publishing_house">
             <filled>
                 <if cond="response.isInDB==true">
-                    <prompt> Ok. Book has been found. Do you want to rent <value expr="global_book_name" /> written by <value expr="global_book_author" /> and issued by <value expr="global_publishing_house" />? </prompt>
-                    <goto next="#confirmation_form" />
-                    <else />
-                    <prompt> I cannot find that book so I cannot help you. Bye </prompt>
-                    <exit />
+                    <assign name="global_book_id" expr="response.bookId"/>
+                    <prompt>Ok. Book has been found. Do you want to rent
+                        <value expr="global_book_name"/>
+                        written by
+                        <value expr="global_book_author"/>
+                        and issued by<value expr="global_publishing_house"/>?
+                    </prompt>
+                    <goto next="#confirmation_form"/>
+                    <else/>
+                    <prompt>I cannot find that book so I cannot help you. Bye</prompt>
+                    <exit/>
                 </if>
             </filled>
         </subdialog>
@@ -86,12 +122,13 @@
 
             <filled>
                 <if cond="confirmation=='yes'">
-                    <prompt> Ok. The book is assigned to you. Bye. </prompt>
-                    <exit />
-
-                    <else />
-                    <prompt> So I cannot help you. Bye. </prompt>
-                    <exit />
+                    <submit next="http://46.101.157.233:3000/add_reservation.xml"
+                            namelist="global_book_name global_book_author global_publishing_house global_user_name global_user_id global_book_id"
+                            method="get"/>
+                    <exit/>
+                    <else/>
+                    <prompt>Ok. Bye.</prompt>
+                    <exit/>
                 </if>
             </filled>
         </field>

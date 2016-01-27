@@ -1,12 +1,13 @@
 Template.reservations.helpers({
     reservations: function() {
-    console.log(Clients.find({_id:Reservations.findOne({_id:this._id})}).name);
+        return Reservations.find({}, {
+            sort: { name: 1 }
+        });
+    }
+});
 
-
-
-        return _.values([
-            Clients.find({_id:Reservations.findOne({_id:this._id})}),
-            Books.find({_id:Reservations.findOne({_id:this._id})})
-        ]);
-  }
+Template.reservations.events({
+    "click .deleteReservation": function () {
+        Reservations.remove(this._id);
+    }
 });

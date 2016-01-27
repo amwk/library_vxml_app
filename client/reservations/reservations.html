@@ -1,10 +1,8 @@
 <template name="reservations">
   <div style="display: inline-block; width: 45%;">
-    <h2>Clients & Books</h2>
+    <h2>Reservations</h2>
     {{#each reservations}}
-        {{#each this}}
-            {{this}}
-        {{/each}}
+        <p>Client:{{name}} Title: {{title}} Author: {{author}} Publisher: {{publisher}}<button class="deleteReservation">&times;</button></p>
     {{/each}}
   </div>
 </template>

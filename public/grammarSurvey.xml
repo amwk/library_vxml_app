@@ -1,0 +1,38 @@
+<vxml version="2.1">
+
+    <form id="survey">
+
+        <var name="confirm_prompt"/>
+        <var name="response"/>
+
+        <field name="field_confirm" type="digits?maxlength=1">
+            <prompt>
+                <value expr="confirm_prompt"/>
+            </prompt>
+
+            <filled>
+                <if cond="field_confirm == 5">
+                    <assign name="response" expr="'5'"/>
+
+                    <elseif cond="field_confirm == 4" />
+                    <assign name="response" expr="'4'"/>
+
+                    <elseif cond="field_confirm == 3" />
+                    <assign name="response" expr="'3'"/>
+
+                    <elseif cond="field_confirm == 2" />
+                    <assign name="response" expr="'2'"/>
+
+                    <elseif cond="field_confirm == 1" />
+                    <assign name="response" expr="'1'"/>
+
+                    <elseif cond="field_confirm == 0" />
+                    <assign name="response" expr="'0'"/>
+
+                </if>
+                <return namelist="response"/>
+            </filled>
+
+        </field>
+    </form>
+</vxml>

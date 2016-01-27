@@ -5,15 +5,6 @@ Meteor.publish('clients', function(clientId) {
   return Clients.find();
 });
 
-Meteor.publish('clientBooks', function(clientId) {
-  var client = Clients.findOne({ _id: clientId });
-  return Books.find({
-    _id: {
-      $in: client.bookId
-    }
-  });
-});
-
 Meteor.publish('books', function(bookId) {
   if (bookId) {
     return Books.find({ _id: bookId });
@@ -21,10 +12,10 @@ Meteor.publish('books', function(bookId) {
   return Books.find();
 });
 
-Meteor.publish('bookClients', function(bookId) {
-  return Clients.find({
-    bookId: {
-      $in: [ bookId ]
+Meteor.publish('reservations', function(reservationId) {
+    if (reservationId) {
+        return Reservations.find({ _id: reservationId });
     }
-  });
+    return Reservations.find();
 });
+
